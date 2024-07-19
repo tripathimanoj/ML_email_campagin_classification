@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Email Classification Prediction</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <style>
+        .predict-btn{
+            margin-left: 45%;      
+        }
+        body{
+            background-color: lightblue;
+        }
+        .form-box{
+            background-color: aliceblue;
+        }
+        .result-ignored { color: red; }
+        .result-read { color: yellow; }
+        .result-acknowledged { color: green; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div><h2 class="mt-5 h-100 d-flex align-items-center justify-content-center">Email Classification Prediction</h2></div>
+        <div class="container col-sm-12 h-100 d-flex align-items-center justify-content-center first">
+            <form id="model-form">
+                <div class="form-group">
+                    <label for="model"><h5>Select Model:</h5></label>
+                    <select class="form-control" id="model" name="model">
+                        <option value="xgb_smote">XGB SMOTE</option>
+                        <option value="rf_tuned_smote_fsel">Random Forest Tuned SMOTE FSel</option>
+                        <option value="rf_tuned_smote">Random Forest Tuned SMOTE</option>
+                    </select>
+                </div>
+            </form>
+        </div>
+
+        <form class="container col-sm-6 form-box" id="input-form">
+            <div class="float-left container col-sm-6 align-items-center">
+                <div class="form-group">
+                    <label for="Subject_Hotness_Score">Subject Hotness Score:</label>
+                    <input type="number" step="any" class="form-control" id="Subject_Hotness_Score" name="Subject_Hotness_Score" required>
+                </div>
+                <div class="form-group">
+                    <label for="Total_Past_Communications">Total Past Communications:</label>
+                    <input type="number" step="any" class="form-control" id="Total_Past_Communications" name="Total_Past_Communications" required>
+                </div>
+                <div class="form-group">
+                    <label for="Word_Count">Word Count:</label>
+                    <input type="number" step="any" class="form-control" id="Word_Count" name="Word_Count" required>
+                </div>
+                <div class="form-group">
+                    <label for="Total_Links">Total Links:</label>
+                    <input type="number" step="any" class="form-control" id="Total_Links" name="Total_Links" required>
+                </div>
+                <div class="form-group">
+                    <label for="Total_Images">Total Images:</label>
+                    <input type="number" step="any" class="form-control" id="Total_Images" name="Total_Images" required>
+                </div>
+                <div class="form-group">
+                    <label for="Email_Type_1">Email Type 1:</label>
+                    <select class="form-control" id="Email_Type_1" name="Email_Type_1">
+                        <option value="True">True</option>
+                        <option value="False">False</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="Email_Type_1">alternate email:</label>
+                    <select class="form-control" id="Email_Type_1" name="Email_Type_1">
+                        <option value="True">True</option>
+                        <option value="False">False</option>
+                    </select>
+                </div>
+            </div>
+            <div class="float-right container col-sm-6 align-items-center ">
+                <div class="form-group">
+                    <label for="Email_Source_Type_1">Email Source Type 1:</label>
+                    <select class="form-control" id="Email_Source_Type_1" name="Email_Source_Type_1">
+                        <option value="True">True</option>
+                        <option value="False">False</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="Email_Campaign_Type_1">Email Campaign Type 1:</label>
+                    <select class="form-control" id="Email_Campaign_Type_1" name="Email_Campaign_Type_1">
+                        <option value="True">True</option>
+                        <option value="False">False</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="Email_Campaign_Type_2">Email Campaign Type 2:</label>
+                    <select class="form-control" id="Email_Campaign_Type_2" name="Email_Campaign_Type_2">
+                        <option value="True">True</option>
+                        <option value="False">False</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="Email_Campaign_Type_3">Email Campaign Type 3:</label>
+                    <select class="form-control" id="Email_Campaign_Type_3" name="Email_Campaign_Type_3">
+                        <option value="True">True</option>
+                        <option value="False">False</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="Time_Email_sent_Category_1">Time Email Sent Category 1:</label>
+                    <select class="form-control" id="Time_Email_sent_Category_1" name="Time_Email_sent_Category_1">
+                        <option value="True">True</option>
+                        <option value="False">False</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="Time_Email_sent_Category_2">Time Email Sent Category 2:</label>
+                    <select class="form-control" id="Time_Email_sent_Category_2" name="Time_Email_sent_Category_2">
+                        <option value="True">True</option>
+                        <option value="False">False</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="Time_Email_sent_Category_3">Time Email Sent Category 3:</label>
+                    <select class="form-control" id="Time_Email_sent_Category_3" name="Time_Email_sent_Category_3">
+                        <option value="True">True</option>
+                        <option value="False">False</option>
+                    </select>
+                </div>
+            </div>
+            <button type="button" class="btn btn-primary mt-5 predict-btn" onclick="submitForm()">Predict</button>
+        </form> 
+        <div id="result" class="container col-sm-6 mt-4 bg-success">
+ 
+        </div>
+    </div>
+
+
+
+    <script>
+        function submitForm() {
+            var modelForm = new FormData(document.getElementById('model-form'));
+            var inputForm = new FormData(document.getElementById('input-form'));
+            for (var pair of inputForm.entries()) {
+                modelForm.append(pair[0], pair[1]);
+            }
+            fetch('/predict', {
+                method: 'POST',
+                body: modelForm
+            })
+            .then(response => response.json())
+            .then(data => {
+                var resultDiv = document.getElementById('result');
+                resultDiv.innerHTML = '';
+                var p = document.createElement('p');
+                if (data.prediction == 0) {
+                    // p.className = 'result-ignored';
+                    p.textContent = 'Email status ==> Ignored';
+                } else if (data.prediction == 1) {
+                    // p.className = 'result-read';
+                    p.textContent = 'Email status ==> Read';
+                } else if (data.prediction == 2) {
+                    // p.className = 'result-acknowledged';
+                    p.textContent = 'Email status ==> Acknowledged';
+                }
+                resultDiv.appendChild(p);
+            });
+        }
+    </script>
+</body>
+</html>
