@@ -1,50 +1,88 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Model For Email Campaign Effectiveness Prediction</title>
+    <title>Email Classification Prediction</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
     <style>
-        .predict-btn{
-            margin-left: 45%;      
-        }
-        body{
+        /* .predict-btn {
+            margin-left: 35%;
+            padding-left: 50px;
+            padding-right: 50px;
+        } */
+
+        body {
             background-color: lightblue;
         }
-        .form-box{
+
+        /* .form-box {
             background-color: aliceblue;
+        } */
+
+        .result-ignored {
+            color: red;
         }
-        .result-ignored { color: red; }
-        .result-read { color: yellow; }
-        .result-acknowledged { color: green; }
+
+        .result-read {
+            color: yellow;
+        }
+
+        .result-acknowledged {
+            color: green;
+        }
+
+        img.bg {
+            position: fixed;
+            height: 100%;
+            width: 100%;
+            top: 0;
+            left: 0;
+            object-fit: cover;
+            z-index: -99;
+        }
+        .H-heading{
+            color: rgb(243, 161, 223);
+        }
+        .form-heading, label{
+            color: rgb(167, 247, 211);
+        }
     </style>
 </head>
+
 <body>
     <div class="container">
-        <div><h2 class="mt-5 h-100 d-flex align-items-center justify-content-center">Model For Email Campaign Effectiveness Prediction</h2></div>
+        <img src="/static/bg.jpg" alt="" class="bg">
+        <div class="H-heading">
+            <h1 class="mt-5 h-100 d-flex align-items-center justify-content-center">Email Classification Prediction</h1>
+        </div>
         <div class="container col-sm-12 h-100 d-flex align-items-center justify-content-center first">
             <form id="model-form">
                 <div class="form-group">
-                    <label for="model"><h5>Select Model:</h5></label>
+                    <label for="model">
+                        <h5>Select Model:</h5>
+                    </label>
                     <select class="form-control" id="model" name="model">
-                        <option value="xgb_smote">XGB SMOTE</option>
-                        <option value="rf_tuned_smote_fsel">Random Forest Tuned SMOTE FSel</option>
-                        <option value="rf_tuned_smote">Random Forest Tuned SMOTE</option>
+                        <option value="xgb_smote">XGB SMOTE | Accuracy score 76%</option>
+                        <option value="rf_tuned_smote_fsel">RF Tuned SMOTE FSel | Accuracy score 75 %</option>
+                        <option value="rf_tuned_smote">RF Tuned SMOTE | Accuracy score 74%</option>
                     </select>
                 </div>
             </form>
         </div>
 
         <form class="container col-sm-6 form-box" id="input-form">
-            <div class="float-left container col-sm-6 align-items-center">
+            <div class="float-left container col-sm-6 align-items-center form-heading">
                 <div class="form-group">
                     <label for="Subject_Hotness_Score">Subject Hotness Score:</label>
-                    <input type="number" step="any" class="form-control" id="Subject_Hotness_Score" name="Subject_Hotness_Score" required>
+                    <input type="number" step="any" class="form-control" id="Subject_Hotness_Score"
+                        name="Subject_Hotness_Score" required>
                 </div>
                 <div class="form-group">
                     <label for="Total_Past_Communications">Total Past Communications:</label>
-                    <input type="number" step="any" class="form-control" id="Total_Past_Communications" name="Total_Past_Communications" required>
+                    <input type="number" step="any" class="form-control" id="Total_Past_Communications"
+                        name="Total_Past_Communications" required>
                 </div>
                 <div class="form-group">
                     <label for="Word_Count">Word Count:</label>
@@ -66,8 +104,8 @@
                     </select>
                 </div>
                 <div class="form-group">
-                    <label for="Email_Type_1">alternate email:</label>
-                    <select class="form-control" id="Email_Type_1" name="Email_Type_1">
+                    <label for="Email_Type_1">Alternate Email:</label>
+                    <select class="form-control" id="Email_Type" name="Email_Type_1">
                         <option value="True">True</option>
                         <option value="False">False</option>
                     </select>
@@ -124,10 +162,10 @@
                     </select>
                 </div>
             </div>
-            <button type="button" class="btn btn-primary mt-5 predict-btn" onclick="submitForm()">Predict</button>
-        </form> 
+            <button type="button" class="col-sm-12 btn btn-primary mt-4 predict-btn" onclick="submitForm()">Predict</button>
+        </form>
         <div id="result" class="container col-sm-6 mt-4 bg-success">
- 
+
         </div>
     </div>
 
@@ -144,24 +182,25 @@
                 method: 'POST',
                 body: modelForm
             })
-            .then(response => response.json())
-            .then(data => {
-                var resultDiv = document.getElementById('result');
-                resultDiv.innerHTML = '';
-                var p = document.createElement('p');
-                if (data.prediction == 0) {
-                    // p.className = 'result-ignored';
-                    p.textContent = 'Email status ==> Ignored';
-                } else if (data.prediction == 1) {
-                    // p.className = 'result-read';
-                    p.textContent = 'Email status ==> Read';
-                } else if (data.prediction == 2) {
-                    // p.className = 'result-acknowledged';
-                    p.textContent = 'Email status ==> Acknowledged';
-                }
-                resultDiv.appendChild(p);
-            });
+                .then(response => response.json())
+                .then(data => {
+                    var resultDiv = document.getElementById('result');
+                    resultDiv.innerHTML = '';
+                    var p = document.createElement('p');
+                    if (data.prediction == 0) {
+                        // p.className = 'result-ignored';
+                        p.textContent = 'Email status ==> Ignored';
+                    } else if (data.prediction == 1) {
+                        // p.className = 'result-read';
+                        p.textContent = 'Email status ==> Read';
+                    } else if (data.prediction == 2) {
+                        // p.className = 'result-acknowledged';
+                        p.textContent = 'Email status ==> Acknowledged';
+                    }
+                    resultDiv.appendChild(p);
+                });
         }
     </script>
 </body>
+
 </html>
