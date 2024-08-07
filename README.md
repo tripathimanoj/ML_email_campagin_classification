@@ -1,5 +1,9 @@
 ## Project Title : Email Campaign Effectiveness Prediction
 
+###   Problem Description :
+
+Most of the small to medium business owners are making effective use of Gmail-based Email marketing Strategies for offline targeting of converting their prospective customers into leads so that they stay with them in business. The main objective is to create a machine learning model to characterize the mail and track the mail that is ignored; read; acknowledged by the reader. Data columns are self-explanatory.   
+
 #### Steps Performed :
 
 - Import required packages
@@ -20,10 +24,6 @@
 - Map the ip of docker container with ec2-instance
 - Expose the ec2-instance
 - Serve the model by public ip
-
-###   Problem Description :
-
-Most of the small to medium business owners are making effective use of Gmail-based Email marketing Strategies for offline targeting of converting their prospective customers into leads so that they stay with them in business. The main objective is to create a machine learning model to characterize the mail and track the mail that is ignored; read; acknowledged by the reader. Data columns are self-explanatory.   
 
 ### Data Summary :
 
