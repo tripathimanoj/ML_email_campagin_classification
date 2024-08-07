@@ -23,7 +23,7 @@ Our features:
 - Total Images - Number of images in the email.
 - Email Status - Our target variable which contains whether the mail was ignored, read, acknowledged by the reader.
 
-#### Steps Performed :
+### Steps Performed :
 
 - Import required packages
 - Data set loading
